@@ -908,6 +908,38 @@ export interface ApiAuthorAuthor extends Schema.CollectionType {
   };
 }
 
+export interface ApiBookBook extends Schema.CollectionType {
+  collectionName: 'books';
+  info: {
+    singularName: 'book';
+    pluralName: 'books';
+    displayName: 'Book';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    BookName: Attribute.String;
+    BookDescription: Attribute.String;
+    pages: Attribute.Integer;
+    BookCover: Attribute.Media;
+    Author: Attribute.String;
+    PackageName: Attribute.Relation<
+      'api::book.book',
+      'manyToOne',
+      'api::package.package'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
 export interface ApiBookTitleBookTitle extends Schema.CollectionType {
   collectionName: 'book_titles';
   info: {
@@ -1010,6 +1042,45 @@ export interface ApiGlobalGlobal extends Schema.SingleType {
   };
 }
 
+export interface ApiPackagePackage extends Schema.CollectionType {
+  collectionName: 'packages';
+  info: {
+    singularName: 'package';
+    pluralName: 'packages';
+    displayName: 'Package';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    PackageName: Attribute.String & Attribute.Required;
+    PackageDescription: Attribute.String;
+    PackageId: Attribute.Integer & Attribute.Required & Attribute.Unique;
+    PackageCover: Attribute.Media;
+    Package: Attribute.Relation<
+      'api::package.package',
+      'oneToMany',
+      'api::book.book'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::package.package',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1031,9 +1102,11 @@ declare module '@strapi/types' {
       'api::about.about': ApiAboutAbout;
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
+      'api::book.book': ApiBookBook;
       'api::book-title.book-title': ApiBookTitleBookTitle;
       'api::category.category': ApiCategoryCategory;
       'api::global.global': ApiGlobalGlobal;
+      'api::package.package': ApiPackagePackage;
     }
   }
 }
