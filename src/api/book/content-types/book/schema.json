@@ -12,34 +12,43 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "BookName": {
-      "type": "string"
+    "BookTitle": {
+      "type": "string",
+      "required": true,
+      "unique": true
     },
-    "BookDescription": {
-      "type": "string"
+    "OriginalTitle": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::original-book.original-book"
     },
-    "pages": {
-      "type": "integer"
-    },
-    "BookCover": {
-      "type": "media",
-      "multiple": true,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
-    "Author": {
-      "type": "string"
-    },
-    "PackageName": {
+    "BookSetTitle": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::package.package",
-      "inversedBy": "Package"
+      "target": "api::book-set.book-set",
+      "inversedBy": "books"
+    },
+    "BookThumbnail": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "BookColour": {
+      "type": "string"
+    },
+    "Content": {
+      "type": "json",
+      "required": true
+    },
+    "BookPackage": {
+      "allowedTypes": [
+        "files"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": true
     }
   }
 }

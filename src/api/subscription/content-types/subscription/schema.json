@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subscriptions",
+  "info": {
+    "singularName": "subscription",
+    "pluralName": "subscriptions",
+    "displayName": "Subscription",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "SubscriptionStoreId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "SubscriptionDescription": {
+      "type": "text"
+    },
+    "SubscriptionTier": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "unique": true
+    },
+    "Enabled": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "book_sets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::book-set.book-set",
+      "mappedBy": "subscription"
+    }
+  }
+}

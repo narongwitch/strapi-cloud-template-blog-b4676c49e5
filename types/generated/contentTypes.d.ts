@@ -920,22 +920,70 @@ export interface ApiBookBook extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    BookName: Attribute.String;
-    BookDescription: Attribute.String;
-    pages: Attribute.Integer;
-    BookCover: Attribute.Media;
-    Author: Attribute.String;
-    PackageName: Attribute.Relation<
+    BookTitle: Attribute.String & Attribute.Required & Attribute.Unique;
+    OriginalTitle: Attribute.Relation<
+      'api::book.book',
+      'oneToOne',
+      'api::original-book.original-book'
+    >;
+    BookSetTitle: Attribute.Relation<
       'api::book.book',
       'manyToOne',
-      'api::package.package'
+      'api::book-set.book-set'
     >;
+    BookThumbnail: Attribute.Media;
+    BookColour: Attribute.String;
+    Content: Attribute.JSON & Attribute.Required;
+    BookPackage: Attribute.Media & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
       Attribute.Private;
     updatedBy: Attribute.Relation<'api::book.book', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiBookSetBookSet extends Schema.CollectionType {
+  collectionName: 'book_sets';
+  info: {
+    singularName: 'book-set';
+    pluralName: 'book-sets';
+    displayName: 'BookSet';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    SetTitle: Attribute.String & Attribute.Required & Attribute.Unique;
+    SetColour: Attribute.String;
+    SetCoverImage: Attribute.Media;
+    Description: Attribute.Text;
+    subscription: Attribute.Relation<
+      'api::book-set.book-set',
+      'manyToOne',
+      'api::subscription.subscription'
+    >;
+    books: Attribute.Relation<
+      'api::book-set.book-set',
+      'oneToMany',
+      'api::book.book'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::book-set.book-set',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::book-set.book-set',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -1042,6 +1090,90 @@ export interface ApiGlobalGlobal extends Schema.SingleType {
   };
 }
 
+export interface ApiOriginalBookOriginalBook extends Schema.CollectionType {
+  collectionName: 'original_books';
+  info: {
+    singularName: 'original-book';
+    pluralName: 'original-books';
+    displayName: 'OriginalBook';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    BookTitle: Attribute.String & Attribute.Required & Attribute.Unique;
+    Pdf: Attribute.Media & Attribute.Required;
+    Audio: Attribute.Media & Attribute.Required;
+    Phonic: Attribute.Media & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::original-book.original-book',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::original-book.original-book',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSubscriptionSubscription extends Schema.CollectionType {
+  collectionName: 'subscriptions';
+  info: {
+    singularName: 'subscription';
+    pluralName: 'subscriptions';
+    displayName: 'Subscription';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    SubscriptionStoreId: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique;
+    SubscriptionDescription: Attribute.Text;
+    SubscriptionTier: Attribute.Integer &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    Enabled: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+    book_sets: Attribute.Relation<
+      'api::subscription.subscription',
+      'oneToMany',
+      'api::book-set.book-set'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::subscription.subscription',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::subscription.subscription',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPackagePackage extends Schema.CollectionType {
   collectionName: 'packages';
   info: {
@@ -1103,9 +1235,12 @@ declare module '@strapi/types' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::book.book': ApiBookBook;
+      'api::book-set.book-set': ApiBookSetBookSet;
       'api::book-title.book-title': ApiBookTitleBookTitle;
       'api::category.category': ApiCategoryCategory;
       'api::global.global': ApiGlobalGlobal;
+      'api::original-book.original-book': ApiOriginalBookOriginalBook;
+      'api::subscription.subscription': ApiSubscriptionSubscription;
       'api::package.package': ApiPackagePackage;
     }
   }

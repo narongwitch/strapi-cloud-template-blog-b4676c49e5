@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "original_books",
+  "info": {
+    "singularName": "original-book",
+    "pluralName": "original-books",
+    "displayName": "OriginalBook"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "BookTitle": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "Pdf": {
+      "allowedTypes": [
+        "files"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": true
+    },
+    "Audio": {
+      "allowedTypes": [
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": true
+    },
+    "Phonic": {
+      "allowedTypes": [
+        "files"
+      ],
+      "type": "media",
+      "multiple": false,
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "book_sets",
+  "info": {
+    "singularName": "book-set",
+    "pluralName": "book-sets",
+    "displayName": "BookSet"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "SetTitle": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "SetColour": {
+      "type": "string"
+    },
+    "SetCoverImage": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "Description": {
+      "type": "text"
+    },
+    "subscription": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::subscription.subscription",
+      "inversedBy": "book_sets"
+    },
+    "books": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::book.book",
+      "mappedBy": "BookSetTitle"
+    }
+  }
+}
